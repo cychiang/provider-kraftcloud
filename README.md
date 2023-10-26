@@ -1,6 +1,6 @@
-# Provider Template
+# provider-kraftcloud
 
-`upjet-provider-template` is a [Crossplane](https://crossplane.io/) provider that
+`provider-kraftcloud` is a [Crossplane](https://crossplane.io/) provider that
 is built using [Upjet](https://github.com/upbound/upjet) code
 generation tools and exposes XRM-conformant managed resources for the
 Template API.
@@ -10,7 +10,7 @@ Template API.
 Install the provider by using the following command after changing the image tag
 to the [latest release](https://marketplace.upbound.io/providers/upbound/upjet-provider-template):
 ```
-up ctp provider install upbound/upjet-provider-template:v0.1.0
+up ctp provider install upbound/provider-kraftcloud:v0.1.0
 ```
 
 Alternatively, you can use declarative installation:
@@ -19,9 +19,9 @@ cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upjet-provider-template
+  name: provider-kraftcloud
 spec:
-  package: upbound/upjet-provider-template:v0.1.0
+  package: upbound/provider-kraftcloud:v0.1.0
 EOF
 ```
 

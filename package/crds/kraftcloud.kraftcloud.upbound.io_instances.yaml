@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
-  name: resources.null.template.upbound.io
+  name: instances.kraftcloud.kraftcloud.upbound.io
 spec:
-  group: null.template.upbound.io
+  group: kraftcloud.kraftcloud.upbound.io
   names:
     categories:
     - crossplane
     - managed
-    - template
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    - kraftcloud
+    kind: Instance
+    listKind: InstanceList
+    plural: instances
+    singular: instance
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. <no value>
+        description: Instance is the Schema for the Instances API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: InstanceSpec defines the desired state of Instance
             properties:
               deletionPolicy:
                 default: Delete
@@ -67,13 +67,24 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
-                    additionalProperties:
+                  args:
+                    items:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
-                    type: object
+                    type: array
+                  autostart:
+                    type: boolean
+                  handlers:
+                    items:
+                      type: string
+                    type: array
+                  image:
+                    type: string
+                  internalPort:
+                    type: number
+                  memoryMb:
+                    type: number
+                  port:
+                    type: number
                 type: object
               managementPolicy:
                 default: FullControl
@@ -261,20 +272,55 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: image is a required parameter
+              rule: self.managementPolicy == 'ObserveOnly' || has(self.forProvider.image)
+            - message: port is a required parameter
+              rule: self.managementPolicy == 'ObserveOnly' || has(self.forProvider.port)
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: InstanceStatus defines the observed state of Instance.
             properties:
               atProvider:
                 properties:
-                  id:
+                  args:
+                    items:
+                      type: string
+                    type: array
+                  autostart:
+                    type: boolean
+                  bootTimeUs:
+                    type: number
+                  createdAt:
                     type: string
-                  triggers:
+                  dns:
+                    type: string
+                  env:
                     additionalProperties:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
                     type: object
+                  handlers:
+                    items:
+                      type: string
+                    type: array
+                  id:
+                    type: string
+                  image:
+                    type: string
+                  internalPort:
+                    type: number
+                  memoryMb:
+                    type: number
+                  port:
+                    type: number
+                  privateIp:
+                    type: string
+                  serviceGroup:
+                    type: string
+                  state:
+                    type: string
+                  uuid:
+                    description: Unique identifier of the instance
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.
