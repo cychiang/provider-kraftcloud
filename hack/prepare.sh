@@ -8,33 +8,33 @@ read -r -p "CRD rootGroup (ex. upbound.io, crossplane.io): " CRD_ROOT_GROUP
 
 REPLACE_FILES='./* ./.github :!build/** :!go.* :!hack/prepare.sh'
 # shellcheck disable=SC2086
-git grep -l 'template' -- ${REPLACE_FILES} | xargs sed -i.bak "s/upjet-provider-template/provider-${PROVIDER_NAME_LOWER}/g"
+git grep -l 'provider-kraftcloud' -- ${REPLACE_FILES} | xargs sed -i.bak "s/provider-provider-kraftcloud/provider-${PROVIDER_NAME_LOWER}/g"
 # shellcheck disable=SC2086
-git grep -l 'template' -- ${REPLACE_FILES} | xargs sed -i.bak "s/template/${PROVIDER_NAME_LOWER}/g"
+git grep -l 'provider-kraftcloud' -- ${REPLACE_FILES} | xargs sed -i.bak "s/provider-kraftcloud/${PROVIDER_NAME_LOWER}/g"
 # shellcheck disable=SC2086
 git grep -l "upbound/provider-${PROVIDER_NAME_LOWER}" -- ${REPLACE_FILES} | xargs sed -i.bak "s|upbound/provider-${PROVIDER_NAME_LOWER}|${ORGANIZATION_NAME}/provider-${PROVIDER_NAME_LOWER}|g"
 # shellcheck disable=SC2086
-git grep -l 'Template' -- ${REPLACE_FILES} | xargs sed -i.bak "s/Template/${PROVIDER_NAME_NORMAL}/g"
+git grep -l 'kraftcloud' -- ${REPLACE_FILES} | xargs sed -i.bak "s/kraftcloud/${PROVIDER_NAME_NORMAL}/g"
 # shellcheck disable=SC2086
 git grep -l "upbound.io" -- "apis/v1*" | xargs sed -i.bak "s|upbound.io|${CRD_ROOT_GROUP}|g"
 # shellcheck disable=SC2086
 git grep -l "ujconfig\.WithRootGroup(\"${PROVIDER_NAME_LOWER}.upbound\.io\")" -- "config/provider.go" | xargs sed -i.bak "s|ujconfig.WithRootGroup(\"${PROVIDER_NAME_LOWER}.upbound.io\")|ujconfig.WithRootGroup(\"${CRD_ROOT_GROUP}\")|g"
 
-# We need to be careful while replacing "template" keyword in go.mod as it could tamper
+# We need to be careful while replacing "provider-kraftcloud" keyword in go.mod as it could tamper
 # some imported packages under require section.
-sed -i.bak "s|upbound/upjet-provider-template|${ORGANIZATION_NAME}/provider-${PROVIDER_NAME_LOWER}|g" go.mod
+sed -i.bak "s|cychiang/provider-provider-kraftcloud|${ORGANIZATION_NAME}/provider-${PROVIDER_NAME_LOWER}|g" go.mod
 sed -i.bak "s|PROJECT_REPO ?= github.com/upbound/|PROJECT_REPO ?= github.com/${ORGANIZATION_NAME}/|g" Makefile
 sed -i.bak "s/\[YEAR\]/$(date +%Y)/g" LICENSE
 
 # Clean up the .bak files created by sed
 git clean -fd
 
-git mv "internal/clients/template.go" "internal/clients/${PROVIDER_NAME_LOWER}.go"
-git mv "cluster/images/upjet-provider-template" "cluster/images/provider-${PROVIDER_NAME_LOWER}"
+git mv "internal/clients/provider-kraftcloud.go" "internal/clients/${PROVIDER_NAME_LOWER}.go"
+git mv "cluster/images/provider-provider-kraftcloud" "cluster/images/provider-${PROVIDER_NAME_LOWER}"
 
 # We need to remove this api folder otherwise first `make generate` fails with
 # the following error probably due to some optimizations in go generate with v1.17:
-# generate: open /Users/hasanturken/Workspace/crossplane-contrib/upjet-provider-template/apis/null/v1alpha1/zz_generated.deepcopy.go: no such file or directory
+# generate: open /Users/hasanturken/Workspace/crossplane-contrib/provider-provider-kraftcloud/apis/null/v1alpha1/zz_generated.deepcopy.go: no such file or directory
 rm -rf apis/null
-# remove the sample directory which was a configuration in the template
+# remove the sample directory which was a configuration in the provider-kraftcloud
 rm -rf config/null
