@@ -7,9 +7,10 @@ package config
 import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
-	"github.com/cychiang/provider-kraftcloud/config/compute"
 
 	ujconfig "github.com/upbound/upjet/pkg/config"
+
+	"github.com/cychiang/provider-kraftcloud/config/compute"
 )
 
 const (
