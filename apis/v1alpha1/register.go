@@ -13,7 +13,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "kraftcloud.upbound.io"
+	Group   = "kraftcloud.crossplane.io"
 	Version = "v1alpha1"
 )
 
